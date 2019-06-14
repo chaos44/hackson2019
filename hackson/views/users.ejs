@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>hackson</title>
+    <link rel='stylesheet' href='stylesheets/hackson.css'>
+  </head>
+  <body>
+    <div class='main'>
+        <div class='header'>tebura_chanデバイス</div>
+        <table class='table' border='1'>
+            <% for (var i = 0; i < result.rows.length; i++) { %>
+                <tr>
+                    <th>ユーザー名</th>
+                    <td><%- result.rows[i].user_name %></td>
+                    <th>ユーザーID</th>
+                    <td><%- result.rows[i].user_id %></td>
+                    <th>点数</th>
+                    <td><%- result.rows[i].score %></td>
+                </tr>
+            <% } %>
+        </table>
+    </div>
+  </body>
+</html>
