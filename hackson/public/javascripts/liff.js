@@ -339,6 +339,42 @@ window.addEventListener('load', function () {
 window.addEventListener('load', function () {
     var checkbox = document.querySelector("input[id=manual]");
 
+    var rangeValue = function (checkbox) {
+        return function (evt) {
+            // 左モータの値を0に設定
+            var cmd_left = new Uint8Array([0x01, 0x00, 0]);
+            // 右モータの値を0に設定
+            var cmd_right = new Uint8Array([0x01, 0x01, 0]);
+            console.log(cmd_left);
+            console.log(cmd_right);
+            
+            window.ledCharacteristic.writeValue(
+                cmd_left
+            ).catch(error => {
+                uiStatusError(makeErrorMsg(error), false);
+            });  
+            window.ledCharacteristic.writeValue(
+                cmd_right
+            ).catch(error => {
+                uiStatusError(makeErrorMsg(error), false);
+            });
+        }
+    }
+    // 手動はチェックされた場合
+    checkbox.addEventListener('change', function () {
+        // 値を書き換え
+        throttle(rangeValue(checkbox), 500);
+        var right_motor = document.getElementById('right_motor');
+        var right_value = document.getElementById('right_value');
+        var left_motor = document.getElementById('left_motor');
+        var left_value = document.getElementById('left_value');
+        // 画面上の値も0にする
+        right_motor.value = 0;
+        right_value.innerHTML = 0;
+        left_motor.value = 0;
+        left_value.innerHTML = 0;
+    });
+
     checkbox.addEventListener('change', function () {
         if (this.checked) {
             // Checkbox is checked..
@@ -355,6 +391,11 @@ window.addEventListener('load', function () {
             //1 byte目：モータ制御モード[0:自動, 1:手動]
             var cmd = new Uint8Array([0x03, 0x00]);
             console.log(cmd);
+            window.ledCharacteristic.writeValue(
+                cmd
+            ).catch(error => {
+                uiStatusError(makeErrorMsg(error), false);
+            });   
         }
         window.ledCharacteristic.writeValue(
             cmd
@@ -373,7 +414,7 @@ window.addEventListener('load', function () {
              //1 byte目：サーボNo [0～2]
              //2 byte目：サーボ角度 [0度～180度]
              //3 byte目：サーボ回転速度 [0～100]
-             var cmd = new Uint8Array([0x02, 0x00, 0, 30]);
+             var cmd = new Uint8Array([0x02, 0x00, 90, 1]);
              console.log(cmd);
  
              window.ledCharacteristic.writeValue(
@@ -399,7 +440,7 @@ window.addEventListener('load', function () {
             //1 byte目：サーボNo [0～2]
             //2 byte目：サーボ角度 [0度～180度]
             //3 byte目：サーボ回転速度 [0～100]
-            var cmd = new Uint8Array([0x02, 0x00, 180, 30]);
+            var cmd = new Uint8Array([0x02, 0x00, 150, 1]);
             console.log(cmd);
 
             window.ledCharacteristic.writeValue(
